@@ -46,11 +46,11 @@ export default {
   mounted() {
     console.log("mounted");
     MDService.productGroups().then((res) => {
-      console.log(res);
+      // res.productGroups = res.productGroups.slice(0, 5)
+      // res.productGroups[0].productlist = ['IC']
       this.productGroups = res.productGroups;
       res.productGroups.forEach((e) => {
         let obj = {};
-
         obj.name = e.groupname;
         obj.lists = [];
         e.productlist.forEach((p) => {
@@ -69,6 +69,21 @@ export default {
       //   };
       this.getHotContracts(res.productGroups);
     });
+
+    this.sockets.marketsSocket.off("tick");
+    this.sockets.marketsSocket.on("tick", (res) => {
+      for (let index = 0; index < this.groups.length; index++) {
+        let symbol = this.groups[index].lists.find(
+          (i) => i.instrumentid == res.symbol
+        );
+        if (symbol) {
+          symbol.close = res.price;
+          symbol.chg = this.calcChg(symbol);
+          break;
+        }
+      }
+      // console.log(res.symbol, res.timestamp)
+    });
   },
   methods: {
     getHotContracts(productGroups) {
@@ -86,7 +101,6 @@ export default {
         isTrading: [1],
       };
       MDService.hotContracts(params).then((res) => {
-        console.log(res);
         this.contracts = res.contracts;
         this.groups.forEach((g) => {
           g.lists.forEach((p) => {
@@ -159,19 +173,6 @@ export default {
           // console.log(res)
         }
       );
-      this.sockets.marketsSocket.on("tick", (res) => {
-        for (let index = 0; index < this.groups.length; index++) {
-          let symbol = this.groups[index].lists.find(
-            (i) => i.instrumentid == res.symbol
-          );
-          if (symbol) {
-            symbol.close = res.price;
-            symbol.chg = this.calcChg(symbol);
-            // console.log(symbol.close, symbol.chg)
-          }
-        }
-        // console.log(this.groups)
-      });
     },
     calcChg(symbol) {
       let chg =
@@ -251,11 +252,7 @@ export default {
     <el-button type="primary" @click="test">Primary</el-button>
     <el-row v-for="group in groups" :key="group.id">
       <el-col :span="2" class="elCol elCol-category">
-        <!-- <div class="grid-content ep-bg-purple text-center" style="background-color:#F5F5F5;vertical-align: middle" width="50px"> -->
-        <!-- <div class="text-center" style="background-color:#F5F5F5;vertical-align: middle" width="50"> -->
         <p>{{ group.name }}</p>
-        <!-- </div> -->
-        <!-- </div> -->
       </el-col>
       <el-col
         v-for="symbol in group.lists"
@@ -271,6 +268,7 @@ export default {
     </el-row>
   </div>
 </template>
+
 <style scoped>
 .elCol {
   /* display: flex; */

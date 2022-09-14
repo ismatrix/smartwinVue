@@ -1,5 +1,4 @@
 <script>
-import { useCounterStore } from "@/stores/counter";
 import { FundService } from "@/utils/api.js";
 import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
@@ -29,6 +28,8 @@ use([
 ]);
 
 export default {
+  name: "NetvalueChart",
+  props: ["fundid"],
   components: {
     VChart,
   },
@@ -43,13 +44,13 @@ export default {
       },
       grid: [
         {
-          left: 0,
-          right: 0,
+          left: "5%",
+          right: "5%",
           height: "60%",
         },
         {
-          left: "10%",
-          right: "8%",
+          left: "5%",
+          right: "5%",
           // top: '63%',
           bottom: "10",
           height: "16%",
@@ -58,7 +59,7 @@ export default {
       axisPointer: {
         link: [
           {
-            xAxisIndex: [1, 0],
+            xAxisIndex: [0, 1],
           },
         ],
       },
@@ -189,7 +190,6 @@ export default {
   },
   created() {
     FundService.netvalues("121429").then((res) => {
-
       this.option.xAxis[0].data = res.netLines.map((i) =>
         this.parseDate(i.tradingday)
       );

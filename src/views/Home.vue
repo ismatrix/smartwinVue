@@ -44,20 +44,21 @@ export default {
     <el-container>
       <el-header><Header /></el-header>
       <el-main>
-        <router-view v-slot="{ Component }">
+        <!-- <router-view v-slot="{ Component, route }">
           <keep-alive>
             <component
               :is="Component"
-              :key="$route.name"
-              v-if="$route.meta.keepAlive"
+              :key="route.name"
+              v-if="route.meta.keepAlive"
             />
           </keep-alive>
-          <!-- <component
+          <component
             :is="Component"
-            :key="$route.name"
-            v-if="!$route.meta.keepAlive"
-          /> -->
-        </router-view>
+            :key="route.name"
+            v-if="!route.meta.keepAlive"
+          />
+        </router-view> -->
+        <router-view></router-view>
       </el-main>
     </el-container>
   </div>

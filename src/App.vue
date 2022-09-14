@@ -1,14 +1,16 @@
 <script>
 import { userStore } from "@/stores/user";
-
+import Home from "@/views/Home.vue"
+import Header from "@/components/Header.vue"
 
 export default {
-  components: {},
+  components: {
+    Header
+  },
   data() {
     const user = userStore();
     return {
       user,
-      
     };
   },
   created() {
@@ -29,8 +31,24 @@ export default {
 
 <template>
   <!-- <keep-alive> -->
-    <router-view></router-view>
+  <!-- <router-view></router-view> -->
   <!-- </keep-alive> -->
+  <Header v-if="$route.name != 'Login'"/>
+  <!-- <router-view v-slot="{ Component }">
+    <keep-alive>
+      <component
+        :is="Component"
+        :key="$route.name"
+        v-if="$route.meta.keepAlive"
+      />
+    </keep-alive>
+    <component
+      :is="Component"
+      :key="$route.name"
+      v-if="!$route.meta.keepAlive"
+    />
+  </router-view> -->
+  <router-view></router-view>
 </template>
 
 <style scoped>

@@ -4,6 +4,8 @@ import About from "@/views/About.vue"
 import Login from "@/views/Login.vue"
 import MarketOverview from "@/components/market/MarketOverview.vue"
 import FundList from "@/components/fund/FundList.vue"
+import FundPro from "@/components/fund/FundPro.vue"
+import Funds from "@/components/fund/Funds.vue"
 import Trade from "@/components/trade/Trade.vue"
 
 let routes = [
@@ -29,6 +31,14 @@ let routes = [
         }
       },
       {
+        path: "/funds",
+        name: 'Funds',
+        component: Funds,
+        meta: {
+          keepAlive: true
+        }
+      },
+      {
         path: "/fundlist",
         name: 'FundList',
         component: FundList,
@@ -49,9 +59,61 @@ let routes = [
 ]
 
 
+routes = [
+  {
+    path: "/",
+    name: "MarketOverview",
+    component: MarketOverview,
+    meta: {
+      keepAlive: true
+    }
+  },
+  {
+    path: "/login",
+    name: 'Login',
+    component: Login,
+  },
+  {
+    path: "/funds",
+    name: 'Funds',
+    component: Funds,
+    meta: {
+      keepAlive: true
+    }
+  },
+  {
+    path: "/fundlist",
+    name: 'FundList',
+    component: FundList,
+    meta: {
+      keepAlive: true
+    }
+  },
+  {
+    path: "/fundpro/:fundid",
+    name: 'FundPro',
+    component: FundPro,
+    meta: {
+      keepAlive: true
+    }
+  },
+  {
+    path: "/trade",
+    name: 'Trade',
+    component: Trade,
+    meta: {
+      keepAlive: true
+    }
+  },
+]
 const router = createRouter({
   history: createWebHistory(),
   routes,
 });
 
+router.beforeEach(async (to, from) => {
+  if (!localStorage.token && to.name !== 'Login') {
+    return {name: 'Login'}
+  }
+})
 export default router

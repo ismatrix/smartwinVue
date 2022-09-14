@@ -1,7 +1,6 @@
 <script>
 import { useCounterStore } from "@/stores/counter"
 import { socketsStore } from "@/stores/socket"
-import io from "socket.io-client";
 
 export default {
   data() {
