@@ -1,6 +1,8 @@
 <script>
 import { MDService } from "@/utils/api.js";
 import { socketsStore } from "@/stores/socket";
+import { ref } from 'vue'
+
 export default {
   data() {
     const sockets = socketsStore();
@@ -19,6 +21,7 @@ export default {
       }
     );
     return {
+      loading: ref(true),
       sockets,
       fetchDone: false,
       productGroups: [],
@@ -44,7 +47,6 @@ export default {
     };
   },
   mounted() {
-    console.log("mounted");
     MDService.productGroups().then((res) => {
       // res.productGroups = res.productGroups.slice(0, 5)
       // res.productGroups[0].productlist = ['IC']
@@ -79,6 +81,7 @@ export default {
         if (symbol) {
           symbol.close = res.price;
           symbol.chg = this.calcChg(symbol);
+          if (this.loading) this.loading = false
           break;
         }
       }
@@ -140,7 +143,6 @@ export default {
     getLastSnapshots(instrumentids) {
       let params = { symbols: this.instrumentids };
       MDService.lastSnapshot(params).then((res) => {
-        console.log(res);
         res.lastSnapshot.forEach((snapshot) => {
           snapshot.instrument;
         });
@@ -158,6 +160,7 @@ export default {
           this.subscribeTick(i);
         });
       });
+      
     },
     getLastSnapshot(instrumentid) {
       let snapshot = this.lastSnapshots.filter(
@@ -248,7 +251,17 @@ export default {
 </script>
 
 <template>
-  <div v-if="true">
+<el-skeleton style="width: 100%" :loading="loading">
+  <template #template>
+    <div style="padding: 20px">
+      <el-skeleton-item variant="p" style="width: 33%; height: 100px" />
+      <el-skeleton-item variant="p" style="width: 100%; height: 100px" />
+      <el-skeleton-item variant="p" style="width: 100%; height: 100px" />
+      <el-skeleton-item variant="p" style="width: 66%; height: 100px" />
+    </div>
+  </template>
+
+  <template #default>
     <el-button type="primary" @click="test">Primary</el-button>
     <el-row v-for="group in groups" :key="group.id">
       <el-col :span="2" class="elCol elCol-category">
@@ -266,7 +279,8 @@ export default {
         <p>{{ symbol.instrumentid }}</p>
       </el-col>
     </el-row>
-  </div>
+  </template>
+</el-skeleton>
 </template>
 
 <style scoped>
