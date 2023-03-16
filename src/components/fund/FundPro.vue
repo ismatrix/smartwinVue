@@ -42,14 +42,16 @@ export default {
   },
 };
 </script>
-<template>
+<template >
+  <div style="padding: 10px 30px">
   <el-row :gutter="2">
     <el-col :span="4" :style="{'background-color': '#e35b5a'}">
       <div class="grid-content ep-bg-purple">
       <p class="text-center" style="color: white; font-size: 25px">
         {{baseInfo.fund && baseInfo.fund.fundname}}
       </p>
-      </div> </el-col>
+      </div>
+    </el-col>
     <el-col :span="4">
       <div class="grid-content ep-bg-purple">
         <p class="text-center font-25">{{baseInfo.dynamicEquity ? formatDigits(baseInfo.dynamicEquity) : "0.00"}}</p>
@@ -81,8 +83,8 @@ export default {
       </div>
     </el-col>
   </el-row>
-  <el-divider />
-  <el-row :gutter="2">
+  <el-divider/>
+  <el-row :gutter="2" style="margin-top: -20px">
     <el-col :span="4">
       <div class="grid-content ep-bg-purple">
         <p class="text-center font-25">{{baseInfo.fund ? formatDigits(baseInfo.fund.equitybeginning) : "0.00"}}</p>
@@ -120,7 +122,7 @@ export default {
       </div>
     </el-col>
   </el-row>
-
+  </div>
   <el-tabs type="border-card" v-model="activeTab" class="demo-tabs" @tab-click="handleClick" :style="{'margin': '30px 30px'}">
     <el-tab-pane label="净值权益" name="first">
       <Netvalue-Chart :fundid="fundid" /> 

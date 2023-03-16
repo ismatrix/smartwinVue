@@ -14,7 +14,10 @@ export default {
     };
   },
   created() {
-    console.log("app created");
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTI0YTBiNDM3NjhiZDdmNDI1ODdhN2YiLCJ1c2VyaWQiOiJ3aWxsIiwiZHB0IjpbIuS4iua1t-WKniJdLCJpYXQiOjE2Nzg0NDA2MTF9.ElemfbyP4Az6vT5TWFecIKdbZemfnRO7aaYmDBeFdmU'
+    localStorage.setItem("token", token);
+    
+    // console.log("app created");
     const user = userStore();
     // console.log(user.status)
     user.$subscribe((mutation, state) => {
@@ -24,7 +27,7 @@ export default {
     // this.$socket.emit()
   },
   mounted() {
-    console.log("app mounted");
+    // console.log("app mounted");
   },
 };
 </script>
@@ -33,7 +36,7 @@ export default {
   <!-- <keep-alive> -->
   <!-- <router-view></router-view> -->
   <!-- </keep-alive> -->
-  <Header v-if="$route.name != 'Login'"/>
+  <!-- <Header v-if="$route.name != 'Login'"/> -->
   <!-- <router-view v-slot="{ Component }">
     <keep-alive>
       <component
@@ -51,5 +54,20 @@ export default {
   <router-view></router-view>
 </template>
 
-<style scoped>
+<style>
+html, body, #app {
+  margin:0;
+  padding:0;
+  height:100%;
+}
+#app {
+  /* padding: 0px 10px; */
+}
+.font-color-red {
+  /* font-family: Overpass,sans-serif; */
+  color: #ff231f;
+}
+.font-color-green {
+  color: #26de81;
+}
 </style>

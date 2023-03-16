@@ -17,7 +17,7 @@ export default {
       "unsubscribe",
       { type: "futures", symbol: "all", resolution: "tick" },
       (res) => {
-        console.log("unsubscribe" + JSON.stringify(res));
+        console.log("unsubscribe " + JSON.stringify(res));
       }
     );
     return {
@@ -72,8 +72,9 @@ export default {
       this.getHotContracts(res.productGroups);
     });
 
-    this.sockets.marketsSocket.off("tick");
+    // this.sockets.marketsSocket.off("tick");
     this.sockets.marketsSocket.on("tick", (res) => {
+      // console.log(res)
       for (let index = 0; index < this.groups.length; index++) {
         let symbol = this.groups[index].lists.find(
           (i) => i.instrumentid == res.symbol
@@ -158,6 +159,8 @@ export default {
         this.lastSnapshots = res.lastSnapshot;
         this.instrumentids.forEach((i) => {
           this.subscribeTick(i);
+          // console.log('subscribe tick')
+          if (this.loading) this.loading = false
         });
       });
       
@@ -251,7 +254,7 @@ export default {
 </script>
 
 <template>
-<el-skeleton style="width: 100%" :loading="loading">
+<el-skeleton style="width: 100%" :loading="loading" animated>
   <template #template>
     <div style="padding: 20px">
       <el-skeleton-item variant="p" style="width: 33%; height: 100px" />
@@ -275,7 +278,7 @@ export default {
         :style="{'backgroundColor': calcBackgroundColor(symbol), 'color': calcTxtColor(symbol)}"
       >
         <p><strong>{{ symbol.name }}</strong></p>
-        <p><h2>{{ symbol.chg}}%</h2></p>
+        <p><h2>{{ symbol.chg }}%</h2></p>
         <p>{{ symbol.instrumentid }}</p>
       </el-col>
     </el-row>

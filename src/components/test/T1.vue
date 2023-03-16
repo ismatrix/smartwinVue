@@ -1,4 +1,5 @@
 <script>
+import { useCounterStore } from "@/stores/counter";
 import { FundService } from "@/utils/api.js";
 import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
@@ -28,8 +29,6 @@ use([
 ]);
 
 export default {
-  name: "NetvalueChart",
-  props: ["fundid"],
   components: {
     VChart,
   },
@@ -38,31 +37,22 @@ export default {
   },
   data() {
     let option = ref({
-      // tooltip: {
-      //   trigger: "axis",
-      //   axisPointer: {
-      //     type: "shadow",
-      //   },
-      //   valueFormatter: value => value == '-' ? value : value.toFixed(4)
-      // },
-      legend: {
-        top: 0,
-        left: 'center',
-        data: ['综合净值', 'MA20', '日回报']
-      },
       tooltip: {
         trigger: "axis",
-        show: true,
+        axisPointer: {
+          type: "shadow",
+        },
+        valueFormatter: value => value == '-' ? value : value.toFixed(4)
       },
       grid: [
         {
-          left: "3%",
-          right: "3%",
+          left: "5%",
+          right: "5%",
           height: "60%",
         },
         {
-          left: "3%",
-          right: "3%",
+          left: "5%",
+          right: "5%",
           // top: '63%',
           bottom: "10",
           height: "16%",
@@ -78,27 +68,30 @@ export default {
       xAxis: [
         {
           type: "time",
+          // data: [],
           splitLine: {
             show: false,
           },
-          boundaryGap: ['2%', '5%']
+          boundaryGap: ['2%', '10%']
         },
         {
           type: "time",
           gridIndex: 1,
-          data: [],
-          boundaryGap: false,
+          boundaryGap: true,
           // axisLine: { onZero: false },
           axisTick: { show: false },
           splitLine: { show: false },
           axisLabel: { show: false },
-          boundaryGap: ['2%', '5%']
+          // min: "dataMin",
+          // max: "dataMax",
+          boundaryGap: ['2%', '10%']
         },
       ],
       yAxis: [
         {
+          show: true,
           type: "value",
-
+          // boundaryGap: [0, '100%'],
           // min: (v) => v.min - 0.1,
           // max: (v) => v.max + 0.1,
           scale: true,
@@ -115,13 +108,18 @@ export default {
           splitLine: { show: false },
         },
       ],
+      tooltip: {
+        trigger: "axis",
+        axisPointer: {
+          type: "shadow",
+        },
+      },
       series: [
         {
           name: "综合净值",
-          z:1,
-          zlevel: 1,
           color: "red",
-          data: [],
+          data: [
+          ],
           type: "line",
           showSymbol: false,
           markPoint: {
@@ -155,29 +153,7 @@ export default {
             fontWeight: "bold",
             offset: [0, -10],
             formatter: (params) => params.value[1].toFixed(4),
-          },
-          tooltip: {
-            show: true,
-            trigger: "axis",
-            valueFormatter: value => value == '-' ? value : value.toFixed(4)
-          },
-        },
-        {
-          name: "MA20",
-          z: 2,
-          zlevel: 2,
-          type: "line",
-          color: "orange",
-          showSymbol: false,
-          smooth: true,
-          data: [],
-          lineStyle: {
-            width: 1,
-          },
-          tooltip: {
-            show: true,
-            trigger: "axis",
-            valueFormatter: value => value == '-' ? value : value.toFixed(4)
+            // formatter: '{b}'
           },
         },
         {
@@ -185,7 +161,7 @@ export default {
           z: 3,
           zlevel: 3,
           type: "bar",
-          barWidth: "1.2",
+          barWidth: "1.5",
           xAxisIndex: 1,
           yAxisIndex: 1,
           data: [],
@@ -204,22 +180,34 @@ export default {
       option,
     };
   },
-  created() {
+  mounted() {
     FundService.netvalues("121429").then((res) => {
       // this.option.xAxis[0].data = res.netLines.map((i) =>
       //   this.parseDate(i.tradingday)
       // );
+
       // this.option.xAxis[1].data = res.netLines.map((i) =>
       //   this.parseDate(i.tradingday)
       // );
-      this.option.series[0].data = res.netLines.map(i => [this.parseDate(i.tradingday), i.netvalue.last]);
-      this.option.series[2].data = res.netLines.map(i =>  [this.parseDate(i.tradingday), i.netvalue.returns]);
+      this.option.series[0].data = res.netLines.map(i => 
+        // return {name: this.parseDate(i.tradingday),
+        // value: [this.parseDate(i.tradingday), i.netvalue.last]}
+         [this.parseDate(i.tradingday), i.netvalue.last]
+      )
+      // this.option.series[0].data = ;
+      // this.option.series[0].data = 
+      // [
+      //       ["2020-11-26", "17.3"],
+      //       ["2020-11-28", "16.8"],
+      //       ["2020-11-29", "17.3"],
+      //     ]
+      // this.option.series[0].data.push({value: ["2020-11-26", "17.3"]})
+      this.option.series[1].data = res.netLines.map((i) => [this.parseDate(i.tradingday), i.netvalue.returns]);
 
-      this.option.series[1].data = this.calculateMA(
-        20,
-        res.netLines.map(i => i.netvalue.last),
-        res.netLines.map(i => this.parseDate(i.tradingday))
-      );
+      // this.option.series[1].data = this.calculateMA(
+      //   20,
+      //   res.netLines.map((i) => i.netvalue.last)
+      // );
     });
   },
   methods: {
@@ -228,25 +216,26 @@ export default {
         // m = str.substr(4, 2) - 1,
         m = str.substr(4, 2),
         d = str.substr(6, 2);
-      // var D = new Date(y, m, d);
+      var D = new Date(y, m, d);
       // return D.getFullYear() == y && D.getMonth() == m && D.getDate() == d
       //   ? D
       //   : "invalid date";
       // return m + "/" + d + "/" + y;
       return y + "-" + m + "-" + d;
+      // return D
     },
-    calculateMA(dayCount, data, date) {
+    calculateMA(dayCount, data) {
       let result = [];
       for (let i = 0, len = data.length; i < len; i++) {
         if (i < dayCount) {
-          result.push([date[i], "-"]);
+          result.push("-");
           continue;
         }
         let sum = 0;
         for (let j = 0; j < dayCount; j++) {
           sum += +data[i - j];
         }
-        result.push([date[i], sum / dayCount]);
+        result.push(sum / dayCount);
       }
       return result;
     },
@@ -255,7 +244,7 @@ export default {
 </script>
 
 <template>
-  <v-chart class="chart" :option="option" />
+  <v-chart class="chart" ref="echart" :option="option" />
 </template>
 
 

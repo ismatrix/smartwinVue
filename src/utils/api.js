@@ -23,6 +23,9 @@ export class MDService {
   static async lastSnapshot(params) {
     return request(baseUrl, '/markets/futures/lastSnapshot', params, 'post')
   }
+  static async products(params) {
+    return request(baseUrl, '/wildcard/get/PRODUCT', params, 'post')
+  }
 }
 
 export class FundService {
@@ -46,6 +49,21 @@ export class FundService {
   }
   static async netvalues(fundid, params) {
     return request(baseUrl, '/funds/'+fundid +'/netValues', params, 'get')
+  }
+}
+
+export class IndService {
+  static async spotdata(params) {
+    return request(baseUrl, '/markets/futures/indicators/spotdata', params, 'post')
+  }
+  static async quotes(params) {
+    return request(baseUrl, '/markets/futures/quotes', params, 'post')
+  }
+  static async bullbear(params) {
+    return request(baseUrl, '/wildcard/get/BULLBEAR', params, 'post')
+  }
+  static async news(params) {
+    return request(baseUrl, '/wildcard/get/NEWS', params, 'post')
   }
 }
 

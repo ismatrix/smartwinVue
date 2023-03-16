@@ -1,7 +1,3 @@
-<template>
-  <div />
-</template>
-
 <script>
   export default {
     name: '{{ properCase name }}',
@@ -14,6 +10,10 @@
     methods: {}
   }
 </script>
+
+<template>
+  <div />
+</template>
 
 <style lang="" scoped>
 

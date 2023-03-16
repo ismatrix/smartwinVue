@@ -7,6 +7,8 @@ import FundList from "@/components/fund/FundList.vue"
 import FundPro from "@/components/fund/FundPro.vue"
 import Funds from "@/components/fund/Funds.vue"
 import Trade from "@/components/trade/Trade.vue"
+import Test from "@/components/test/T1.vue"
+import Ind from "@/components/ind/Ind.vue"
 
 let routes = [
   {
@@ -60,14 +62,14 @@ let routes = [
 
 
 routes = [
-  {
-    path: "/",
-    name: "MarketOverview",
-    component: MarketOverview,
-    meta: {
-      keepAlive: true
-    }
-  },
+  // {
+  //   path: "/",
+  //   name: "MarketOverview",
+  //   component: MarketOverview,
+  //   meta: {
+  //     keepAlive: true
+  //   }
+  // },
   {
     path: "/login",
     name: 'Login',
@@ -101,6 +103,22 @@ routes = [
     path: "/trade",
     name: 'Trade',
     component: Trade,
+    meta: {
+      keepAlive: true
+    }
+  },
+  {
+    path: "/test",
+    name: 'Test',
+    component: Test,
+    meta: {
+      keepAlive: true
+    }
+  },
+  {
+    path: "/ind",
+    name: 'Ind',
+    component: Ind,
     meta: {
       keepAlive: true
     }
