@@ -125,7 +125,7 @@ routes = [
   },
 ]
 const router = createRouter({
-  history: createWebHistory(process.env.NODE_ENV === 'production' ? '/opt/smartwinVue/' : '/'),
+  history: createWebHistory(process.env.NODE_ENV === 'production' ? '/smartwinVue/' : '/'),
   routes,
 });
 
